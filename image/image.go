@@ -118,12 +118,14 @@ func (img *Image) OperatingSystem() string {
 	return os
 }
 
+
+
 // MarshalJSON serializes the image to JSON. It sorts the top-level keys so
 // that JSON that's been manipulated by a push/pull cycle with a legacy
 // registry won't end up with a different key order.
 func (img *Image) MarshalJSON() ([]byte, error) {
 	type MarshalImage Image
-
+//有关Marshal，看https://blog.csdn.net/zxy_666/article/details/80173288
 	pass1, err := json.Marshal(MarshalImage(*img))
 	if err != nil {
 		return nil, err
