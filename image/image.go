@@ -60,6 +60,7 @@ type V1Image struct {
 }
 
 // Image stores the image configuration
+//在V1Image的基础上新增了很多东西
 type Image struct {
 	V1Image
 	Parent     ID        `json:"parent,omitempty"`
@@ -86,12 +87,15 @@ func (img *Image) ID() ID {
 	return img.computedID
 }
 
-// ImageID stringifies ID.
+// ImageID stringifies ID. computerID的string
 func (img *Image) ImageID() string {
 	return img.ID().String()
 }
 
-// RunConfig returns the image's container config.
+// RunConfig returns the image's container config. 配置信息
+/*
+https://github.com/moby/moby/blob/master/api/types/container/config.go
+*/
 func (img *Image) RunConfig() *container.Config {
 	return img.Config
 }
@@ -133,7 +137,7 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 }
 
 // ChildConfig is the configuration to apply to an Image to create a new
-// Child image. Other properties of the image are copied from the parent.
+// Child image. Other properties of the image are copied from the parent.为了创建子镜像所创建的结构体
 type ChildConfig struct {
 	ContainerID     string
 	Author          string
@@ -143,7 +147,7 @@ type ChildConfig struct {
 	Config          *container.Config
 }
 
-// NewChildImage creates a new Image as a child of this image.
+// NewChildImage creates a new Image as a child of this image. 创建子镜像
 func NewChildImage(img *Image, child ChildConfig, os string) *Image {
 	isEmptyLayer := layer.IsEmpty(child.DiffID)
 	var rootFS *RootFS
