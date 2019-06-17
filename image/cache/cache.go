@@ -25,7 +25,7 @@ type LocalImageCache struct {
 	store image.Store
 }
 
-// GetCache returns the image id found in the cache
+// GetCache returns the image id found in the cache		返回在cache中找到的镜像id
 func (lic *LocalImageCache) GetCache(imgID string, config *containertypes.Config) (string, error) {
 	return getImageIDAndError(getLocalCachedImage(lic.store, image.ID(imgID), config))
 }
@@ -45,19 +45,20 @@ type ImageCache struct {
 	localImageCache *LocalImageCache
 }
 
-// Populate adds an image to the cache (to be queried later)
+// Populate adds an image to the cache (to be queried later)	将一个即将要被查询的镜像添加到ic的source中
 func (ic *ImageCache) Populate(image *image.Image) {
 	ic.sources = append(ic.sources, image)
 }
 
-// GetCache returns the image id found in the cache
+// GetCache returns the image id found in the cache    在cache中找到的镜像，返回的string为找到的镜像的ID
 func (ic *ImageCache) GetCache(parentID string, cfg *containertypes.Config) (string, error) {
-	imgID, err := ic.localImageCache.GetCache(parentID, cfg)
+	imgID, err := ic.localImageCache.GetCache(parentID, cfg)   //直接根据parenID根据和参数找cache
 	if err != nil {
 		return "", err
 	}
+	//没找到从前往后找
 	if imgID != "" {
-		for _, s := range ic.sources {
+		for _, s := range ic.sources { 
 			if ic.isParent(s.ID(), image.ID(imgID)) {
 				return imgID, nil
 			}
@@ -144,7 +145,10 @@ func (ic *ImageCache) restoreCachedImage(parent, target *image.Image, cfg *conta
 	}
 	return imgID, nil
 }
-
+//一个ID是否是另一个ID的父ID
+/*
+递归的查找父ID
+*/
 func (ic *ImageCache) isParent(imgID, parentID image.ID) bool {
 	nextParent, err := ic.store.GetParent(imgID)
 	if err != nil {
