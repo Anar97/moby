@@ -16,18 +16,18 @@ import (
 
 // Store is an interface for creating and accessing images
 type Store interface {
-	Create(config []byte) (ID, error)
-	Get(id ID) (*Image, error)
-	Delete(id ID) ([]layer.Metadata, error)
-	Search(partialID string) (ID, error)
-	SetParent(id ID, parent ID) error
-	GetParent(id ID) (ID, error)
-	SetLastUpdated(id ID) error
-	GetLastUpdated(id ID) (time.Time, error)
-	Children(id ID) []ID
-	Map() map[ID]*Image
-	Heads() map[ID]*Image
-	Len() int
+	Create(config []byte) (ID, error)	//
+	Get(id ID) (*Image, error)		//
+	Delete(id ID) ([]layer.Metadata, error)	//
+	Search(partialID string) (ID, error)	//
+	SetParent(id ID, parent ID) error	//
+	GetParent(id ID) (ID, error)		//
+	SetLastUpdated(id ID) error		//
+	GetLastUpdated(id ID) (time.Time, error)//
+	Children(id ID) []ID			//
+	Map() map[ID]*Image			//
+	Heads() map[ID]*Image			//
+	Len() int				//
 }
 
 // LayerGetReleaser is a minimal interface for getting and releasing images.
