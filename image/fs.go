@@ -86,14 +86,14 @@ func (s *fs) Walk(f DigestWalkFunc) error {
 	return nil
 }
 
-// Get returns the content stored under a given digest.
+// Get returns the content stored under a given digest.返回根据digest所存储的内容,Get是用一个读锁来封装get函数
 func (s *fs) Get(dgst digest.Digest) ([]byte, error) {
 	s.RLock()
 	defer s.RUnlock()
 
 	return s.get(dgst)
 }
-
+//
 func (s *fs) get(dgst digest.Digest) ([]byte, error) {
 	content, err := ioutil.ReadFile(s.contentFile(dgst))
 	if err != nil {
@@ -108,7 +108,7 @@ func (s *fs) get(dgst digest.Digest) ([]byte, error) {
 	return content, nil
 }
 
-// Set stores content by checksum.
+// Set stores content by checksum.  用校验和来存储内容
 func (s *fs) Set(data []byte) (digest.Digest, error) {
 	s.Lock()
 	defer s.Unlock()
@@ -125,7 +125,7 @@ func (s *fs) Set(data []byte) (digest.Digest, error) {
 	return dgst, nil
 }
 
-// Delete removes content and metadata files associated with the digest.
+// Delete removes content and metadata files associated with the digest.去除与digest的内容和元数据文件
 func (s *fs) Delete(dgst digest.Digest) error {
 	s.Lock()
 	defer s.Unlock()
@@ -151,7 +151,7 @@ func (s *fs) SetMetadata(dgst digest.Digest, key string, data []byte) error {
 	return ioutils.AtomicWriteFile(filepath.Join(s.metadataDir(dgst), key), data, 0600)
 }
 
-// GetMetadata returns metadata for a given digest.
+// GetMetadata returns metadata for a given digest.   根据所给的digest来返回metadata
 func (s *fs) GetMetadata(dgst digest.Digest, key string) ([]byte, error) {
 	s.RLock()
 	defer s.RUnlock()
@@ -166,7 +166,7 @@ func (s *fs) GetMetadata(dgst digest.Digest, key string) ([]byte, error) {
 	return bytes, nil
 }
 
-// DeleteMetadata removes the metadata associated with a digest.
+// DeleteMetadata removes the metadata associated with a digest. 删除与一个digest相关的metadata
 func (s *fs) DeleteMetadata(dgst digest.Digest, key string) error {
 	s.Lock()
 	defer s.Unlock()
