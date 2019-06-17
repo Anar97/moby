@@ -5,11 +5,11 @@ import (
 )
 
 // compare two Config struct. Do not compare the "Image" nor "Hostname" fields
-// If OpenStdin is set, then it differs
+// If OpenStdin is set, then it differs			比较两个容器的Config（参数），来确定要不要使用这个镜像,如过以下条件都满足，则返回True
 func compare(a, b *container.Config) bool {
 	if a == nil || b == nil ||
 		a.OpenStdin || b.OpenStdin {
-		return false
+		return false				
 	}
 	if a.AttachStdout != b.AttachStdout ||
 		a.AttachStderr != b.AttachStderr ||
