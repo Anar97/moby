@@ -23,10 +23,10 @@ import (
 )
 
 type imageDescriptor struct {
-	refs     []reference.NamedTagged
-	layers   []string
-	image    *image.Image
-	layerRef layer.Layer
+	refs     []reference.NamedTagged	//
+	layers   []string			//
+	image    *image.Image			//	
+	layerRef layer.Layer			//
 }
 
 type saveSession struct {
@@ -50,8 +50,9 @@ func (l *tarexporter) Save(names []string, outStream io.Writer) error {
 
 // parseNames will parse the image names to a map which contains image.ID to *imageDescriptor.
 // Each imageDescriptor holds an image top layer reference named 'layerRef'. It is taken here, should be released later.
+//parse会将镜像名解析成一个镜像ID到镜像描述的映射，每一个镜像描述都会有一个镜像顶层的引用，叫做layerRef。（...最后一句随后补充）
 func (l *tarexporter) parseNames(names []string) (desc map[image.ID]*imageDescriptor, rErr error) {
-	imgDescr := make(map[image.ID]*imageDescriptor)
+	imgDescr := make(map[image.ID]*imageDescriptor)					//建立映射
 	defer func() {
 		if rErr != nil {
 			l.releaseLayerReferences(imgDescr)
@@ -144,7 +145,7 @@ func (l *tarexporter) parseNames(names []string) (desc map[image.ID]*imageDescri
 	return imgDescr, nil
 }
 
-// takeLayerReference will take/Get the image top layer reference
+// takeLayerReference will take/Get the image top layer reference得到顶层的引用
 func (l *tarexporter) takeLayerReference(id image.ID, imgDescr *imageDescriptor) error {
 	img, err := l.is.Get(id)
 	if err != nil {
