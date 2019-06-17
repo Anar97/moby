@@ -1,10 +1,10 @@
-// Package layer is package for managing read-only
+// Package layer is package for managing read-only	layer包是一个用来管理只读、读写挂在在联合文件系统驱动上的包。
 // and read-write mounts on the union file system
-// driver. Read-only mounts are referenced using a
-// content hash and are protected from mutation in
+// driver. Read-only mounts are referenced using a	只读挂载在是使用了内容hash并且在暴露的接口中被保护以防变异
+// content hash and are protected from mutation in	Tar格式是被用来创造只读层并且到处只读层和可写层。
 // the exposed interface. The tar format is used
-// to create read-only layers and export both
-// read-only and writable layers. The exported
+// to create read-only layers and export both		
+// read-only and writable layers. The exported		被导出的只读层的tar数据应该与创造这层所用的tar所匹配
 // tar data for a read-only layer should match
 // the tar used to create the layer.
 package layer // import "github.com/docker/docker/layer"
@@ -65,7 +65,7 @@ func (id ChainID) String() string {
 	return string(id)
 }
 
-// DiffID is the hash of an individual layer tar.
+// DiffID is the hash of an individual layer tar.  一个独立层的tar的哈希
 type DiffID digest.Digest
 
 // String returns a string rendition of a layer DiffID
@@ -81,7 +81,7 @@ type TarStreamer interface {
 	TarStream() (io.ReadCloser, error)
 }
 
-// Layer represents a read-only layer
+// Layer represents a read-only layer只读层
 type Layer interface {
 	TarStreamer
 
@@ -113,16 +113,16 @@ type Layer interface {
 	Metadata() (map[string]string, error)
 }
 
-// RWLayer represents a layer which is
+// RWLayer represents a layer which is 读写层
 // read and writable
 type RWLayer interface {
 	TarStreamer
 
-	// Name of mounted layer
+	// Name of mounted layer  		挂载的layer的Name
 	Name() string
 
 	// Parent returns the layer which the writable
-	// layer was created from.
+	// layer was created from.		可写层的父层
 	Parent() Layer
 
 	// Mount mounts the RWLayer and returns the filesystem path
@@ -130,7 +130,7 @@ type RWLayer interface {
 	Mount(mountLabel string) (containerfs.ContainerFS, error)
 
 	// Unmount unmounts the RWLayer. This should be called
-	// for every mount. If there are multiple mount calls
+	// for every mount. If there are multiple mount calls			每一次挂载都会对应一次Unmounts
 	// this operation will only decrement the internal mount counter.
 	Unmount() error
 
@@ -151,7 +151,7 @@ type RWLayer interface {
 }
 
 // Metadata holds information about a
-// read-only layer
+// read-only layer元数据只存储只读层的数据
 type Metadata struct {
 	// ChainID is the content hash of the layer
 	ChainID ChainID
@@ -160,10 +160,10 @@ type Metadata struct {
 	// create the layer
 	DiffID DiffID
 
-	// Size is the size of the layer and all parents
+	// Size is the size of the layer and all parents	该层和所有父层的大小
 	Size int64
 
-	// DiffSize is the size of the top layer
+	// DiffSize is the size of the top layer		最顶层layer的大小
 	DiffSize int64
 }
 
