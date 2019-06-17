@@ -15,6 +15,7 @@ import (
 )
 
 // ID is the content-addressable ID of an image.
+//type Digest string
 type ID digest.Digest
 
 func (id ID) String() string {
@@ -70,6 +71,7 @@ type Image struct {
 	OSFeatures []string  `json:"os.features,omitempty"`
 
 	// rawJSON caches the immutable JSON associated with this image.
+	//rawJSON存储了镜像的JSON信息
 	rawJSON []byte
 
 	// computedID is the ID computed from the hash of the image config.
