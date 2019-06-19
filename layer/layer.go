@@ -204,12 +204,12 @@ type DescribableStore interface {
 	RegisterWithDescriptor(io.Reader, ChainID, distribution.Descriptor) (Layer, error)
 }
 
-// CreateChainID returns ID for a layerDigest slice
+// CreateChainID returns ID for a layerDigest slice					CreateChainID返回一个ChainID
 func CreateChainID(dgsts []DiffID) ChainID {
 	return createChainIDFromParent("", dgsts...)
 }
 
-func createChainIDFromParent(parent ChainID, dgsts ...DiffID) ChainID {
+func createChainIDFromParent(parent ChainID, dgsts ...DiffID) ChainID {			//递归构造chainID
 	if len(dgsts) == 0 {
 		return parent
 	}
