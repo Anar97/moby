@@ -200,15 +200,15 @@ func (is *store) Search(term string) (ID, error) {
 	return IDFromDigest(dgst), nil
 }
 
-func (is *store) Get(id ID) (*Image, error) {
+func (is *store) Get(id ID) (*Image, error) {				//返回的是
 	// todo: Check if image is in images
 	// todo: Detect manual insertions and start using them
-	config, err := is.fs.Get(id.Digest())
+	config, err := is.fs.Get(id.Digest())				//config是一个fs结构体
 	if err != nil {
 		return nil, err
 	}
 
-	img, err := NewFromJSON(config)
+	img, err := NewFromJSON(config)					//通过config创造一个镜像镜像的img.rawJSON就是config 
 	if err != nil {
 		return nil, err
 	}
@@ -227,16 +227,18 @@ func (is *store) Delete(id ID) ([]layer.Metadata, error) {
 	defer is.Unlock()
 
 	imageMeta := is.images[id]
-	if imageMeta == nil {
+	if imageMeta == nil {							//该id不存在，则返回一个错误
 		return nil, fmt.Errorf("unrecognized image ID %s", id.String())
 	}
+	//存在
 	img, err := is.Get(id)
 	if err != nil {
 		return nil, fmt.Errorf("unrecognized image %s, %v", id.String(), err)
 	}
-	if !system.IsOSSupported(img.OperatingSystem()) {
+	if !system.IsOSSupported(img.OperatingSystem()) {//系统不支持
 		return nil, fmt.Errorf("unsupported image operating system %q", img.OperatingSystem())
 	}
+	//存在这个id了，系统也支持了
 	for id := range imageMeta.children {
 		is.fs.DeleteMetadata(id.Digest(), "parent")
 	}
@@ -271,11 +273,11 @@ func (is *store) SetParent(id, parent ID) error {
 }
 
 func (is *store) GetParent(id ID) (ID, error) {
-	d, err := is.fs.GetMetadata(id.Digest(), "parent")
+	d, err := is.fs.GetMetadata(id.Digest(), "parent")		//root/metadata/<alg>/hex/parent目录下找到的byte数据
 	if err != nil {
 		return "", err
 	}
-	return ID(d), nil // todo: validate?
+	return ID(d), nil // todo: validate?				改成ID，于是乎得到parent的ID
 }
 
 // SetLastUpdated time for the image ID to the current time
@@ -294,14 +296,14 @@ func (is *store) GetLastUpdated(id ID) (time.Time, error) {
 	return time.Parse(time.RFC3339Nano, string(bytes))
 }
 
-func (is *store) Children(id ID) []ID {
-	is.RLock()
+func (is *store) Children(id ID) []ID {				//返回child的id（如果id是错的，也就是说is的images里不存在这个id
+	is.RLock()						//		则返回一个空的ID数组
 	defer is.RUnlock()
 
 	return is.children(id)
 }
 
-func (is *store) children(id ID) []ID {
+func (is *store) children(id ID) []ID {				//返回child的id
 	var ids []ID
 	if is.images[id] != nil {
 		for id := range is.images[id].children {
@@ -311,22 +313,22 @@ func (is *store) children(id ID) []ID {
 	return ids
 }
 
-func (is *store) Heads() map[ID]*Image {
+func (is *store) Heads() map[ID]*Image {			//返回的是没有孩子的ID到镜像的映射
 	return is.imagesMap(false)
 }
 
-func (is *store) Map() map[ID]*Image {
+func (is *store) Map() map[ID]*Image {				//返回一个映射，返回的是一个与is.images相同的映射
 	return is.imagesMap(true)
 }
 
-func (is *store) imagesMap(all bool) map[ID]*Image {
+func (is *store) imagesMap(all bool) map[ID]*Image {		
 	is.RLock()
 	defer is.RUnlock()
 
 	images := make(map[ID]*Image)
 
 	for id := range is.images {
-		if !all && len(is.children(id)) > 0 {
+		if !all && len(is.children(id)) > 0 {		//当all==flase且有孩子时，contine
 			continue
 		}
 		img, err := is.Get(id)
