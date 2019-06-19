@@ -39,7 +39,7 @@ const (
 )
 
 // NewFSStoreBackend returns new filesystem based backend for image.Store
-func NewFSStoreBackend(root string) (StoreBackend, error) {
+func NewFSStoreBackend(root string) (StoreBackend, error) {			
 	return newFSStore(root)
 }
 
@@ -57,7 +57,7 @@ func newFSStore(root string) (*fs, error) {
 }
 
 func (s *fs) contentFile(dgst digest.Digest) string {						//通过digest，制造一个文件目录
-	return filepath.Join(s.root, contentDirName, string(dgst.Algorithm()), dgst.Hex())	// root/content/<alg>/hex
+	return filepath.Join(s.root, contentDirName, string(dgst.Algorithm()), dgst.Hex())	// 返回faroot/content/<alg>/hex
 }
 
 func (s *fs) metadataDir(dgst digest.Digest) string {						//通过digest，制造一个文件目录
@@ -101,7 +101,7 @@ func (s *fs) get(dgst digest.Digest) ([]byte, error) {
 	}
 
 	// todo: maybe optional
-	if digest.FromBytes(content) != dgst {
+	if digest.FromBytes(content) != dgst {		//从byte转化为digest
 		return nil, fmt.Errorf("failed to verify: %v", dgst)
 	}
 
@@ -125,7 +125,7 @@ func (s *fs) Set(data []byte) (digest.Digest, error) {
 	return dgst, nil
 }
 
-// Delete removes content and metadata files associated with the digest.去除与digest相关的内容和元数据文件
+// Delete removes content and metadata files associated with the digest.	去除与dgst相关的内容和元数据文件
 func (s *fs) Delete(dgst digest.Digest) error {
 	s.Lock()
 	defer s.Unlock()
@@ -136,7 +136,7 @@ func (s *fs) Delete(dgst digest.Digest) error {
 	return os.Remove(s.contentFile(dgst))
 }
 
-// SetMetadata sets metadata for a given ID. It fails if there's no base file.
+// SetMetadata sets metadata for a given ID. It fails if there's no base file.	//写入元数据到root/metadata/<alg>/hex/key里面
 func (s *fs) SetMetadata(dgst digest.Digest, key string, data []byte) error {
 	s.Lock()
 	defer s.Unlock()
