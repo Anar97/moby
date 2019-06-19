@@ -56,15 +56,15 @@ func newFSStore(root string) (*fs, error) {
 	return s, nil
 }
 
-func (s *fs) contentFile(dgst digest.Digest) string {
-	return filepath.Join(s.root, contentDirName, string(dgst.Algorithm()), dgst.Hex())
+func (s *fs) contentFile(dgst digest.Digest) string {						//通过digest，制造一个文件目录
+	return filepath.Join(s.root, contentDirName, string(dgst.Algorithm()), dgst.Hex())	// root/content/<alg>/hex
 }
 
-func (s *fs) metadataDir(dgst digest.Digest) string {
-	return filepath.Join(s.root, metadataDirName, string(dgst.Algorithm()), dgst.Hex())
+func (s *fs) metadataDir(dgst digest.Digest) string {						//通过digest，制造一个文件目录
+	return filepath.Join(s.root, metadataDirName, string(dgst.Algorithm()), dgst.Hex())	// root/metadata/<alg>/hex
 }
 
-// Walk calls the supplied callback for each image ID in the storage backend.
+// Walk calls the supplied callback for each image ID in the storage backend.			//
 func (s *fs) Walk(f DigestWalkFunc) error {
 	// Only Canonical digest (sha256) is currently supported
 	s.RLock()
@@ -86,7 +86,7 @@ func (s *fs) Walk(f DigestWalkFunc) error {
 	return nil
 }
 
-// Get returns the content stored under a given digest.返回根据digest所存储的内容,Get是用一个读锁来封装get函数
+// Get returns the content stored under a given digest.		返回根据digest所存储的内容,Get是用一个读锁来封装get函数
 func (s *fs) Get(dgst digest.Digest) ([]byte, error) {
 	s.RLock()
 	defer s.RUnlock()
@@ -125,7 +125,7 @@ func (s *fs) Set(data []byte) (digest.Digest, error) {
 	return dgst, nil
 }
 
-// Delete removes content and metadata files associated with the digest.去除与digest的内容和元数据文件
+// Delete removes content and metadata files associated with the digest.去除与digest相关的内容和元数据文件
 func (s *fs) Delete(dgst digest.Digest) error {
 	s.Lock()
 	defer s.Unlock()
