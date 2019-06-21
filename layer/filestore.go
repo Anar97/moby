@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	stringIDRegexp      = regexp.MustCompile(`^[a-f0-9]{64}(-init)?$`)
+	stringIDRegexp      = regexp.MustCompile(`^[a-f0-9]{64}(-init)?$`)//正则表达式
 	supportedAlgorithms = []digest.Algorithm{
 		digest.SHA256,
 		// digest.SHA384, // Currently not used
@@ -32,15 +32,15 @@ type fileMetadataStore struct {
 	root string
 }
 
-type fileMetadataTransaction struct {
-	store *fileMetadataStore
-	ws    *ioutils.AtomicWriteSet
+type fileMetadataTransaction struct {			//事务
+	store *fileMetadataStore			//store里面封装了一个root string
+	ws    *ioutils.AtomicWriteSet			//ws里也是，所以这两个root有什么区别呢？
 }
 
 // newFSMetadataStore returns an instance of a metadata store
 // which is backed by files on disk using the provided root
 // as the root of metadata files.
-func newFSMetadataStore(root string) (*fileMetadataStore, error) {
+func newFSMetadataStore(root string) (*fileMetadataStore, error) {		//产生一个地址
 	if err := os.MkdirAll(root, 0700); err != nil {
 		return nil, err
 	}
@@ -51,27 +51,27 @@ func newFSMetadataStore(root string) (*fileMetadataStore, error) {
 
 func (fms *fileMetadataStore) getLayerDirectory(layer ChainID) string {
 	dgst := digest.Digest(layer)
-	return filepath.Join(fms.root, string(dgst.Algorithm()), dgst.Hex())
+	return filepath.Join(fms.root, string(dgst.Algorithm()), dgst.Hex())			//	root/alg/hex
 }
 
 func (fms *fileMetadataStore) getLayerFilename(layer ChainID, filename string) string {
-	return filepath.Join(fms.getLayerDirectory(layer), filename)
+	return filepath.Join(fms.getLayerDirectory(layer), filename)				//	root/alg/hex/filename
 }
 
 func (fms *fileMetadataStore) getMountDirectory(mount string) string {
-	return filepath.Join(fms.root, "mounts", mount)
+	return filepath.Join(fms.root, "mounts", mount)						//	root/alg/hex/mounts/mount
 }
 
 func (fms *fileMetadataStore) getMountFilename(mount, filename string) string {
-	return filepath.Join(fms.getMountDirectory(mount), filename)
+	return filepath.Join(fms.getMountDirectory(mount), filename)				//	root/alg/hex/mounts/mount/filename
 }
 
 func (fms *fileMetadataStore) StartTransaction() (*fileMetadataTransaction, error) {
-	tmpDir := filepath.Join(fms.root, "tmp")
-	if err := os.MkdirAll(tmpDir, 0755); err != nil {
-		return nil, err
+	tmpDir := filepath.Join(fms.root, "tmp")		//临时文件夹
+	if err := os.MkdirAll(tmpDir, 0755); err != nil {	
+		return nil, err	
 	}
-	ws, err := ioutils.NewAtomicWriteSet(tmpDir)
+	ws, err := ioutils.NewAtomicWriteSet(tmpDir)	
 	if err != nil {
 		return nil, err
 	}
