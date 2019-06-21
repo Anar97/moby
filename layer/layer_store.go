@@ -48,12 +48,12 @@ type layerStore struct {
 
 // StoreOptions are the options used to create a new Store instance
 type StoreOptions struct {
-	Root                      string
-	MetadataStorePathTemplate string
-	GraphDriver               string
+	Root                      string			//根目录
+	MetadataStorePathTemplate string			//元数据存储路径末班
+	GraphDriver               string			
 	GraphDriverOptions        []string
-	IDMapping                 *idtools.IdentityMapping
-	PluginGetter              plugingetter.PluginGetter
+	IDMapping                 *idtools.IdentityMapping	//UID GID的映射
+	PluginGetter              plugingetter.PluginGetter	//
 	ExperimentalEnabled       bool
 	OS                        string
 }
