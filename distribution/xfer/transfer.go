@@ -21,11 +21,11 @@ func (e DoNotRetry) Error() string {
 
 // Watcher is returned by Watch and can be passed to Release to stop watching.
 type Watcher struct {
-	// signalChan is used to signal to the watcher goroutine that
-	// new progress information is available, or that the transfer
+	// signalChan is used to signal to the watcher goroutine that		给watcher goroutine一个消息——————新进程信息已经可以获取了
+	// new progress information is available, or that the transfer		或者transfer已经结束了
 	// has finished.
 	signalChan chan struct{}
-	// releaseChan signals to the watcher goroutine that the watcher
+	// releaseChan signals to the watcher goroutine that the watcher	给watcher goroutine一个消息，watcher应该被解除
 	// should be detached.
 	releaseChan chan struct{}
 	// running remains open as long as the watcher is watching the
