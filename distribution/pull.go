@@ -24,8 +24,8 @@ type Puller interface {
 	Pull(ctx context.Context, ref reference.Named, platform *specs.Platform) error
 }
 
-// newPuller returns a Puller interface that will pull from either a v1 or v2
-// registry. The endpoint argument contains a Version field that determines
+// newPuller returns a Puller interface that will pull from either a v1 or v2		返回一个Puller接口v1或者v2，endpoint参数包含一个
+// registry. The endpoint argument contains a Version field that determines		版本域，决定创建v1还是v2，其他参数
 // whether a v1 or v2 puller will be created. The other parameters are passed
 // through to the underlying puller implementation for use during the actual
 // pull operation.
@@ -49,7 +49,7 @@ func newPuller(endpoint registry.APIEndpoint, repoInfo *registry.RepositoryInfo,
 	return nil, fmt.Errorf("unknown version %d for registry %s", endpoint.Version, endpoint.URL)
 }
 
-// Pull initiates a pull operation. image is the repository name to pull, and
+// Pull initiates a pull operation. image is the repository name to pull, and			初始化一个pull操作
 // tag may be either empty, or indicate a specific tag to pull.
 func Pull(ctx context.Context, ref reference.Named, imagePullConfig *ImagePullConfig) error {
 	// Resolve the Repository name from fqn to RepositoryInfo
@@ -161,9 +161,9 @@ func Pull(ctx context.Context, ref reference.Named, imagePullConfig *ImagePullCo
 	return TranslatePullError(lastErr, ref)
 }
 
-// writeStatus writes a status message to out. If layersDownloaded is true, the
+// writeStatus writes a status message to out. If layersDownloaded is true, the		如果ture，则已经下载了镜像
 // status message indicates that a newer image was downloaded. Otherwise, it
-// indicates that the image is up to date. requestedTag is the tag the message
+// indicates that the image is up to date. requestedTag is the tag the message		否则
 // will refer to.
 func writeStatus(requestedTag string, out progress.Output, layersDownloaded bool) {
 	if layersDownloaded {
@@ -173,14 +173,14 @@ func writeStatus(requestedTag string, out progress.Output, layersDownloaded bool
 	}
 }
 
-// ValidateRepoName validates the name of a repository.
+// ValidateRepoName validates the name of a repository.					验证仓库的名字
 func ValidateRepoName(name reference.Named) error {
 	if reference.FamiliarName(name) == api.NoBaseImageSpecifier {
 		return errors.WithStack(reservedNameError(api.NoBaseImageSpecifier))
 	}
 	return nil
 }
-
+//
 func addDigestReference(store refstore.Store, ref reference.Named, dgst digest.Digest, id digest.Digest) error {
 	dgstRef, err := reference.WithDigest(reference.TrimNamed(ref), dgst)
 	if err != nil {
