@@ -148,7 +148,7 @@ type existingTokenHandler struct {
 	token string
 }
 
-func (th *existingTokenHandler) Scheme() string {
+func (th *existingTokenHandler) Scheme() string {//????
 	return "bearer"
 }
 
