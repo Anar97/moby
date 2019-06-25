@@ -41,7 +41,7 @@ type ImageServiceConfig struct {
 	RegistryService           registry.Service
 }
 
-// NewImageService returns a new ImageService from a configuration
+// NewImageService returns a new ImageService from a configuration		
 func NewImageService(config ImageServiceConfig) *ImageService {
 	logrus.Debugf("Max Concurrent Downloads: %d", config.MaxConcurrentDownloads)
 	logrus.Debugf("Max Concurrent Uploads: %d", config.MaxConcurrentUploads)
@@ -58,7 +58,7 @@ func NewImageService(config ImageServiceConfig) *ImageService {
 	}
 }
 
-// ImageService provides a backend for image management
+// ImageService provides a backend for image management			镜像管理的后端
 type ImageService struct {
 	containers                containerStore
 	distributionMetadataStore metadata.Store
@@ -72,7 +72,7 @@ type ImageService struct {
 	uploadManager             *xfer.LayerUploadManager
 }
 
-// DistributionServices provides daemon image storage services
+// DistributionServices provides daemon image storage services		镜像存储服务
 type DistributionServices struct {
 	DownloadManager   distribution.RootFSDownloadManager
 	V2MetadataService metadata.V2MetadataService
